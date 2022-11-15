@@ -1,0 +1,11 @@
+{
+  "scripts": {
+    "server-dev": "npx nodemon --watch server server/index.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "morgan": "^1.10.0",
+    "pg": "^8.8.0"
+  }
+}
