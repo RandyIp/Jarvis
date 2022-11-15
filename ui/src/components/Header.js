@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-const Header = ({ listening, start, stop }) => {
+const Header = ({ listening, start, stop, setCmdModal }) => {
 
   const heyListen = () => {
     if (!listening) {
@@ -13,7 +13,7 @@ const Header = ({ listening, start, stop }) => {
   return (
     <Container>
       <Functions>
-        <HeaderButtons>Commands</HeaderButtons>
+        <HeaderButtons onClick={() => setCmdModal(true)}>Commands</HeaderButtons>
         <HeaderButtons>Search</HeaderButtons>
         <HeaderButtons>Music</HeaderButtons>
         <HeaderButtons>Parse</HeaderButtons>

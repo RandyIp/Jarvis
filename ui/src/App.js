@@ -4,42 +4,52 @@ import styled from 'styled-components'
 import axios from 'axios'
 import jarvis from './assets/jarvis.gif'
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition'
+import CmdModal from './modals/CmdModal.js';
 import Header from './components/Header.js'
 
 function App() {
   // ----------------------------------- States -----------------------------------
   const [log, setLog] = useState(false)
   const [active, setActive] = useState(false)
+  const [cmdModal, setCmdModal] = useState(false);
+
 
   // ----------------------------------- Commands -----------------------------------
   const commands = [
     {
       command: 'Jarvis reset logs',
-      callback: ({ resetTranscript }) => { resetTranscript() }
+      callback: ({ resetTranscript }) => { resetTranscript() },
+      description: 'Use this command to clear out your log history'
     },
     {
       command: 'Jarvis show logs',
-      callback: () => setLog(true)
+      callback: () => setLog(true),
+      description: 'Use this command to show your log history'
     },
     {
       command: 'Jarvis hide logs',
-      callback: () => setLog(false)
+      callback: () => setLog(false),
+      description: 'Use this command to hide your log history'
     },
     {
       command: 'Jarvis shut down',
-      callback: () => SpeechRecognition.stopListening()
+      callback: () => SpeechRecognition.stopListening(),
+      description: 'Use this command to turn Jarvis off'
     },
     {
       command: 'Jarvis open *',
-      callback: (result) => window.open(`https://${result.replace(/\s/g, '')}.com`, '_blank')
+      callback: (result) => window.open(`https://${result.replace(/\s/g, '')}.com`, '_blank'),
+      description: 'Use this command to open new tabs'
     },
     {
       command: 'Jarvis Google *',
-      callback: (result) => window.open(`https://google.com/search?q=${result.replace(/\s/g, '+')}`)
+      callback: (result) => window.open(`https://google.com/search?q=${result.replace(/\s/g, '+')}`),
+      description: 'Use this command to google search anything'
     },
     {
       command: 'Jarvis play shoot to thrill',
-      callback: () => window.open('https://www.youtube.com/watch?v=AD6wqKo51MU&t=109s', '_blank')
+      callback: () => window.open('https://www.youtube.com/watch?v=AD6wqKo51MU&t=109s', '_blank'),
+      description: 'Use this command to party~'
     },
   ]
 
@@ -60,7 +70,8 @@ function App() {
   } else {
     return (
       <Container>
-        <Header start={SpeechRecognition.startListening} stop={SpeechRecognition.stopListening} listening={listening} />
+        <CmdModal cmdModal={cmdModal} setCmdModal={setCmdModal} commands={commands} />
+        <Header start={SpeechRecognition.startListening} stop={SpeechRecognition.stopListening} listening={listening} setCmdModal={setCmdModal} />
         <Background>
           <JarvisGif src={jarvis} alt='jarvis gif' />
           {!active && <p>Say Jarvis to begin</p>}

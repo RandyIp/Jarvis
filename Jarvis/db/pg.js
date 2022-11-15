@@ -11,3 +11,5 @@ const pool = new Pool({
 })
 
 module.exports = pool
+
+// SELECT * FROM db WHERE id IN ANY(ARRAY[1,2,3,4])
