@@ -1,14 +1,17 @@
-import './App.css';
-import { useState } from 'react'
+import React from 'react';
+import { useState, useEffect } from 'react'
 import styled from 'styled-components'
+import axios from 'axios'
 import jarvis from './assets/jarvis.gif'
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition'
+import Header from './components/Header.js'
 
 function App() {
-  const [background, setBackground] = useState('white')
+  // ----------------------------------- States -----------------------------------
   const [log, setLog] = useState(false)
+  const [active, setActive] = useState(false)
 
-  // insert commands
+  // ----------------------------------- Commands -----------------------------------
   const commands = [
     {
       command: 'Jarvis reset logs',
@@ -38,13 +41,9 @@ function App() {
       command: 'Jarvis play shoot to thrill',
       callback: () => window.open('https://www.youtube.com/watch?v=AD6wqKo51MU&t=109s', '_blank')
     },
-    {
-      command: 'set background *',
-      callback: (result) => setBackground(result)
-    }
   ]
 
-  // set up voice recognition
+  // ----------------------------------- Voice Recognition -----------------------------------
   const {
     transcript,
     listening,
@@ -52,39 +51,49 @@ function App() {
     browserSupportsSpeechRecognition
   } = useSpeechRecognition({ commands });
 
-  const heyListen = () => {
-    SpeechRecognition.startListening({ continuous: true })
-  }
+  // starts awake by default
+  useEffect(() => { SpeechRecognition.startListening({ continuous: true }) }, [])
 
-  // return error or content
+  // ----------------------------------- Return Div -----------------------------------
   if (!browserSupportsSpeechRecognition) {
     return <span>Browser doesn't support speech recognition.</span>;
   } else {
     return (
-      <Background color={background}>
-        <h1>Jarvis in Progress</h1>
-        <img src={jarvis} alt='jarvis gif' />
-        <p>At your service sir</p>
-        <p>Status: {listening ? 'Awake' : 'Asleep'}</p>
-        {!listening && <button onClick={heyListen}>Start</button>}
-        {log && <div>
-          <h2>Transcript</h2>
-          <hr></hr>
-          <p>{transcript}</p>
-        </div>
-        }
-      </Background>
+      <Container>
+        <Header start={SpeechRecognition.startListening} stop={SpeechRecognition.stopListening} listening={listening} />
+        <Background>
+          <JarvisGif src={jarvis} alt='jarvis gif' />
+          {!active && <p>Say Jarvis to begin</p>}
+          {active && <p>At your service sir</p>}
+          <p>Status: {listening ? 'Awake' : 'Asleep'}</p>
+          {log && <div>
+            <h2>Transcript</h2>
+            <hr></hr>
+            <p>{transcript}</p>
+          </div>
+          }
+        </Background>
+      </Container>
     );
   }
 }
 
+// ----------------------------------- Styled Components -----------------------------------
+const Container = styled.div`
+height: 100vh;
+width: 100%;
+`
 const Background = styled.div`
-  background-color: ${props => props.color};
+  background-color: #121a23;
   display:flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  height: 100vh;
   width: 100%;
+  height: 94vh;
+  color: white;
+`
+
+const JarvisGif = styled.img`
+margin: 0.5rem 0 0.5rem 0
 `
 export default App;
