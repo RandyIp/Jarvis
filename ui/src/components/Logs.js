@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import CommandHistoryCard from './CommandHistoryCard.js'
 
-const Logs = ({ transcript, commandHistory }) => {
+const Logs = ({ transcript }) => {
   return (
     <Container>
       <TranscriptContainer>
@@ -10,9 +10,9 @@ const Logs = ({ transcript, commandHistory }) => {
       </TranscriptContainer>
       <CommandContainer>
         <h1>Command History</h1>
-        {commandHistory.map(entry => (
+        {/* {commandHistory.map(entry => (
           <CommandContainer entry={entry} />
-        ))}
+        ))} */}
       </CommandContainer>
     </Container>
   )

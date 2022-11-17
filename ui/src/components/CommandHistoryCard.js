@@ -1,13 +1,14 @@
-import useCollapse from 'react-collapsed';
+// import useCollapse from 'react-collapsed';
 
 const CommandHistoryCard = ({ entry }) => {
-  const { getCollapseProps, getToggleProps, isExpanded } = useCollapse();
+  // const { getCollapseProps, getToggleProps, isExpanded } = useCollapse();
+  console.log(entry)
   return (
     <div>
-      <div {...getToggleProps()}>
+      <div >
         {entry}
       </div>
-      <div {...getCollapseProps()}>
+      <div >
         <div className="content">
           Now you can see the hidden content. <br /><br />
           Click again to hide...

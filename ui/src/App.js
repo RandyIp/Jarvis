@@ -13,18 +13,18 @@ import Logs from './components/Logs.js'
 function App() {
 
   // ----------------------------------- States -----------------------------------
-  const [log, setLog] = useState(false)
-  const [active, setActive] = useState(false)
-  const [addingKeyword, setAddingKeyword] = useState(false)
-  const [keywords, setKeywords] = useState([])
-  const [keywordForm, setKeywordForm] = useState('')
-  const [keywordCount, setKeywordCount] = useState(0)
-  const [node, setNode] = useState('parameter')
-  const [commandHistory, setCommandHistory] = useState([])
+  const [log, setLog] = useState(false);
+  const [active, setActive] = useState(false);
+  const [addingKeyword, setAddingKeyword] = useState(false);
+  const [keywords, setKeywords] = useState([]);
+  const [keywordForm, setKeywordForm] = useState('');
+  const [keywordCount, setKeywordCount] = useState(0);
+  const [node, setNode] = useState('parameter');
+  const [commandHistory, setCommandHistory] = useState([]);
   const [cmdModal, setCmdModal] = useState(false);
   const [parseModal, setParseModal] = useState(false);
   const [keyModal, setKeyModal] = useState(false);
-  let words = useRef([])
+  let words = useRef([]);
 
   // ----------------------------------- Commands -----------------------------------
   const commands = [
@@ -34,7 +34,9 @@ function App() {
         // wake jarvis up
         if (!active) {
           let translated = await translation(result, 'admin')
-          if (translated === 'Jarvis') setActive(true)
+          if (translated === 'Jarvis') {
+            setActive(true)
+          }
         } else {
           // generic translation
           let translated = await translation(result, 'parameter')
@@ -42,33 +44,33 @@ function App() {
           let paramWords = translated.substring(funcWord.length)
 
           if (translated === 'show logs') {
-            setLog(true)
-            setActive(false)
-            setCommandHistory([...commandHistory, translated])
+            setLog(true);
+            setActive(false);
+            // setCommandHistory([...commandHistory, translated]);
           }
 
           else if (translated === 'reset logs') {
             resetTranscript()
             setActive(false)
-            setCommandHistory([...commandHistory, translated])
+            // setCommandHistory([...commandHistory, translated])
           }
 
           else if (translated === 'hide logs') {
             setLog(false)
             setActive(false)
-            setCommandHistory([...commandHistory, translated])
+            // setCommandHistory([...commandHistory, translated])
           }
 
           else if (funcWord === 'open') {
             window.open(`https://${paramWords.replace(/\s/g, '')}.com`, '_blank')
             setActive(false)
-            setCommandHistory([...commandHistory, translated])
+            // setCommandHistory([...commandHistory, translated])
           }
 
           else if (funcWord === 'Google') {
             window.open(`https://google.com/search?q=${result.replace(/\s/g, '+')}`)
             setActive(false)
-            setCommandHistory([...commandHistory, translated])
+            // setCommandHistory([...commandHistory, translated])
           }
         }
       }
@@ -127,6 +129,7 @@ function App() {
       })
   }, [])
 
+
   // ----------------------------------- Translation Function -----------------------------------
   const translation = async (str, func = 'parameter') => {
     let temp_arr = []
@@ -141,6 +144,16 @@ function App() {
     return translated
   }
 
+  const test = () => {
+    console.log('we hit the test')
+    console.log('This is the state of active:', active)
+    setActive(prevState => !prevState)
+    console.log('This is the state of active:', active)
+  }
+
+  useEffect(() => {
+
+  }, [test])
   // ----------------------------------- Return Div -----------------------------------
   return (
     <Container>
@@ -157,7 +170,7 @@ function App() {
         </div>
         }
       </Background>}
-      {log && <Logs transcript={transcript} commandHistory={commandHistory} words={words} />}
+      {log && <Logs transcript={transcript} words={words} />}
       <Toaster />
     </Container>
   );
