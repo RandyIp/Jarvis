@@ -55,9 +55,9 @@ const KeyModal = ({ keyModal, setKeyModal, keywords, addingKeyword, setAddingKey
           </select>
         </form>
         {addingKeyword && <div>
-          <h2>Say keyword "your keyword" - 3 times</h2>
+          <h2>Say keyword "your keyword" - 5 times</h2>
           <h3>{keywordCount}</h3>
-          <p>Please say your keyword {3 - keywordCount} more times</p>
+          <p>Please say your keyword {5 - keywordCount} more times</p>
           <button onClick={cancelFunc}>cancel</button>
         </div>}
       </div>

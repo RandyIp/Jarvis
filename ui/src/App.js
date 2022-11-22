@@ -22,68 +22,72 @@ function App() {
   const [node, setNode] = useState('parameter');
   const [commandHistory, setCommandHistory] = useState([]);
   const [cmdModal, setCmdModal] = useState(false);
-  const [parseModal, setParseModal] = useState(false);
   const [keyModal, setKeyModal] = useState(false);
   let words = useRef([]);
 
   // ----------------------------------- Commands -----------------------------------
   const commands = [
     {
-      command: '*',
+      command: 'Jarvis *',
       callback: async (result) => {
         // wake jarvis up
-        if (!active) {
-          let translated = await translation(result, 'admin')
-          if (translated === 'Jarvis') {
-            setActive(true)
-          }
-        } else {
-          // generic translation
-          let translated = await translation(result, 'parameter')
-          let funcWord = translated.split(' ')[0]
-          let paramWords = translated.substring(funcWord.length)
+        // if (!active) {
+        //   let translated = await translation(result, 'admin')
+        //   console.log(translated)
+        //   if (await translated === 'Jarvis') {
+        //     console.log('hi')
+        //     test()
+        //   }
+        //   setActive(true)
+        // } else {
+        // generic translation
+        let translated = await translation(result, 'parameter')
+        let funcWord = translated.split(' ')[0]
+        let paramWords = translated.substring(funcWord.length)
 
-          if (translated === 'show logs') {
-            setLog(true);
-            setActive(false);
-            // setCommandHistory([...commandHistory, translated]);
-          }
+        if (translated === 'show logs') {
+          setLog(true);
+          setActive(false);
+          setCommandHistory([...commandHistory, translated])
+        }
 
-          else if (translated === 'reset logs') {
-            resetTranscript()
-            setActive(false)
-            // setCommandHistory([...commandHistory, translated])
-          }
+        else if (translated === 'reset logs') {
+          resetTranscript()
+          setActive(false)
+          setCommandHistory([...commandHistory, translated])
+        }
 
-          else if (translated === 'hide logs') {
-            setLog(false)
-            setActive(false)
-            // setCommandHistory([...commandHistory, translated])
-          }
+        else if (translated === 'hide logs') {
+          setLog(false)
+          setActive(false)
+          setCommandHistory([...commandHistory, translated])
+        }
 
-          else if (funcWord === 'open') {
-            window.open(`https://${paramWords.replace(/\s/g, '')}.com`, '_blank')
-            setActive(false)
-            // setCommandHistory([...commandHistory, translated])
-          }
+        else if (funcWord === 'open') {
+          window.open(`https://${paramWords.replace(/\s/g, '')}.com`, '_blank')
+          setActive(false)
+          setCommandHistory([...commandHistory, translated])
+        }
 
-          else if (funcWord === 'Google') {
-            window.open(`https://google.com/search?q=${result.replace(/\s/g, '+')}`)
-            setActive(false)
-            // setCommandHistory([...commandHistory, translated])
-          }
+        else if (funcWord === 'Google') {
+          window.open(`https://google.com/search?q=${paramWords.replace(/\s/g, '+')}`)
+          setActive(false)
+          setCommandHistory([...commandHistory, translated])
+        }
+
+        else if (translated === 'shut down') {
+          SpeechRecognition.stopListening()
+          setActive(false)
+          setCommandHistory([...commandHistory, translated])
+        }
+
+        else if (translated === 'Play Shoot to Thrill') {
+          window.open('https://www.youtube.com/watch?v=AD6wqKo51MU&t=109s', '_blank')
+          setActive(false)
+          setCommandHistory([...commandHistory, translated])
+          // }
         }
       }
-    },
-    {
-      command: 'Jarvis shut down',
-      callback: () => SpeechRecognition.stopListening(),
-      description: 'Use this command to turn Jarvis off'
-    },
-    {
-      command: 'Jarvis play shoot to thrill',
-      callback: () => window.open('https://www.youtube.com/watch?v=AD6wqKo51MU&t=109s', '_blank'),
-      description: 'Use this command to party~'
     },
     {
       command: 'Keyword *',
@@ -93,7 +97,7 @@ function App() {
           words.current = [...words.current, result]
           axios.post('http://localhost:1128/keywords', { word: result, func: node, keyword: keywordForm })
         }
-        if (keywordCount === 2) {
+        if (keywordCount === 4) {
           setAddingKeyword(false)
           setKeywords([...keywords, keywordForm])
           toast.success('Your keyword has been created!')
@@ -136,30 +140,24 @@ function App() {
     for (let i of words.current) {
       if (str.includes(i)) temp_arr.push(i)
     }
-    const translator = await axios.get('http://localhost:1128/translator', { wordArray: temp_arr, func: func })
+    const translator = await axios.post('http://localhost:1128/translator', { wordArray: temp_arr, func: func })
     let translated = str
     for (let i of translator.data) {
       translated = translated.replace(i.word, i.keyword)
     }
+    console.log(translated)
     return translated
   }
 
   const test = () => {
-    console.log('we hit the test')
-    console.log('This is the state of active:', active)
-    setActive(prevState => !prevState)
-    console.log('This is the state of active:', active)
+    setActive(true)
   }
-
-  useEffect(() => {
-
-  }, [test])
   // ----------------------------------- Return Div -----------------------------------
   return (
     <Container>
       <CmdModal cmdModal={cmdModal} setCmdModal={setCmdModal} commands={commands} />
       <KeyModal keyModal={keyModal} setKeyModal={setKeyModal} keywords={keywords} addingKeyword={addingKeyword} setAddingKeyword={setAddingKeyword} keywordCount={keywordCount} setKeywordCount={setKeywordCount} keywordForm={keywordForm} setKeywordForm={setKeywordForm} node={node} setNode={setNode} />
-      <Header start={SpeechRecognition.startListening} stop={SpeechRecognition.stopListening} listening={listening} setCmdModal={setCmdModal} setParseModal={setParseModal} setKeyModal={setKeyModal} log={log} setLog={setLog} active={active} />
+      <Header start={SpeechRecognition.startListening} stop={SpeechRecognition.stopListening} listening={listening} setCmdModal={setCmdModal} setKeyModal={setKeyModal} log={log} setLog={setLog} active={active} />
       {!log && <Background>
         <JarvisGif src={jarvis} alt='jarvis gif' />
         <p>Status: {listening ? 'Awake' : 'Asleep'}</p>
@@ -170,7 +168,7 @@ function App() {
         </div>
         }
       </Background>}
-      {log && <Logs transcript={transcript} words={words} />}
+      {log && <Logs transcript={transcript} words={words} commandHistory={commandHistory} />}
       <Toaster />
     </Container>
   );
