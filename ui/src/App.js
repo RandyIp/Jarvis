@@ -33,12 +33,11 @@ function App() {
         // wake jarvis up
         // if (!active) {
         //   let translated = await translation(result, 'admin')
-        //   console.log(translated)
-        //   if (await translated === 'Jarvis') {
+        //   console.log(translated === 'Jarvis')
+        //   if (translated === 'Jarvis') {
         //     console.log('hi')
         //     test()
         //   }
-        //   setActive(true)
         // } else {
         // generic translation
         let translated = await translation(result, 'parameter')
@@ -99,6 +98,7 @@ function App() {
         }
         if (keywordCount === 4) {
           setAddingKeyword(false)
+          setKeywordCount(0)
           setKeywords([...keywords, keywordForm])
           toast.success('Your keyword has been created!')
         }

@@ -21,15 +21,22 @@ const CmdModal = ({ cmdModal, setCmdModal, commands }) => {
   return (<Modal isOpen={cmdModal} onRequestClose={() => setCmdModal(false)}>
     <CloseButton onClick={() => setCmdModal(false)}>X</CloseButton>
     <Container>
-      <h1>Commands (* is your arguments)</h1>
+      <h1>Commands (Remember to say Jarvis first)</h1>
       <h1>Description</h1>
     </Container>
-    {commands.map(entry => (
-      <Container key={entry.command}>
-        <p>{entry.command}</p>
-        <p>{entry.description}</p>
-      </Container>
-    ))}
+    <Container>
+      <p>Show logs</p>
+      <p>shows transcript and command history</p>
+      <p>Hide logs</p>
+      <p>hides transcript and history</p>
+      <p>Reset logs</p>
+      <p>clears your history</p>
+      <p>Open (insert website)</p>
+      <p>opens your desired website</p>
+      <p>Google (search query)</p>
+      <p>performs a google search for you</p>
+    </Container>
+
   </Modal>)
 }
 
