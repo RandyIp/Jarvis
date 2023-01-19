@@ -30,16 +30,6 @@ function App() {
     {
       command: 'Jarvis *',
       callback: async (result) => {
-        // wake jarvis up
-        // if (!active) {
-        //   let translated = await translation(result, 'admin')
-        //   console.log(translated === 'Jarvis')
-        //   if (translated === 'Jarvis') {
-        //     console.log('hi')
-        //     test()
-        //   }
-        // } else {
-        // generic translation
         let translated = await translation(result, 'parameter')
         let funcWord = translated.split(' ')[0]
         let paramWords = translated.substring(funcWord.length)
@@ -84,7 +74,6 @@ function App() {
           window.open('https://www.youtube.com/watch?v=AD6wqKo51MU&t=109s', '_blank')
           setActive(false)
           setCommandHistory([...commandHistory, translated])
-          // }
         }
       }
     },
@@ -116,22 +105,22 @@ function App() {
 
 
   // ----------------------------------- Use Effect -----------------------------------
-  useEffect(() => {
-    SpeechRecognition.startListening({ continuous: true })
-    let temp_arr = []
-    let temp_arr1 = []
-    axios.get('http://localhost:1128/keywords')
-      .then(result => {
-        for (let i of result.data[0]) {
-          temp_arr.push(i.keyword)
-        }
-        for (let i of result.data[1]) {
-          temp_arr1.push(i.word)
-        }
-        words.current = temp_arr1
-        setKeywords(temp_arr)
-      })
-  }, [])
+  // useEffect(() => {
+  //   SpeechRecognition.startListening({ continuous: true })
+  //   let temp_arr = []
+  //   let temp_arr1 = []
+  //   axios.get('http://localhost:1128/keywords')
+  //     .then(result => {
+  //       for (let i of result.data[0]) {
+  //         temp_arr.push(i.keyword)
+  //       }
+  //       for (let i of result.data[1]) {
+  //         temp_arr1.push(i.word)
+  //       }
+  //       words.current = temp_arr1
+  //       setKeywords(temp_arr)
+  //     })
+  // }, [])
 
 
   // ----------------------------------- Translation Function -----------------------------------
