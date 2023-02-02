@@ -1,6 +1,6 @@
 pool = require('../db/pg.js')
 
-//need to update on deployment a few more times
+//need to update on deployment a few more times and some
 const translator = {
   post: async (req, res) => {
     result = await pool.query(`
